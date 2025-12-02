@@ -93,12 +93,26 @@ npm run android
 ### 앱 전용 기능
 모바일 앱의 `MyInvestApp/src/` 폴더에 구현
 
+## Alpha Vantage API 통합 ✅
+
+실시간 주식 시장 데이터를 위해 Alpha Vantage API가 통합되었습니다.
+
+### 설정
+1. `.env.local` 파일 생성 (웹) 또는 `.env` 파일 생성 (앱)
+2. API 키 추가 (자세한 내용은 `API_SETUP.md` 참고)
+
+### 테스트
+- 웹: `http://localhost:5173/api-test`
+- API 함수: `src/utils/alphaVantageApi.js` 참고
+
 ## 향후 계획
 
+- [x] 실시간 시장 데이터 API 연동 (Alpha Vantage)
+- [x] 차트 라이브러리 통합 (Recharts)
 - [ ] 웹 앱도 shared 코드 사용하도록 마이그레이션
 - [ ] 실시간 데이터 스트리밍 (WebSocket)
 - [ ] 푸시 알림 구현
-- [ ] 차트 라이브러리 통합
 - [ ] 백엔드 API 연동
 - [ ] 사용자 인증 및 데이터 동기화
+- [ ] API 응답 캐싱 구현
 
