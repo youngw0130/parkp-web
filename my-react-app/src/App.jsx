@@ -9,6 +9,7 @@ import News from './pages/News'
 import Alerts from './pages/Alerts'
 import PaperTrading from './pages/PaperTrading'
 import Community from './pages/Community'
+import AlphaVantageExamples from './examples/AlphaVantageExamples'
 
 export default function App() {
     return (
@@ -25,6 +26,7 @@ export default function App() {
                             <Route path="/alerts" element={<Alerts />} />
                             <Route path="/paper-trading" element={<PaperTrading />} />
                             <Route path="/community" element={<Community />} />
+                            <Route path="/api-test" element={<AlphaVantageExamples />} />
                         </Routes>
                     </div>
                 </div>
