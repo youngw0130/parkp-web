@@ -27,11 +27,15 @@ export default function RealTimeStockChart({ symbol = 'AAPL', interval = '5min' 
         setError(null);
         
         const data = await getStockIntradayData(symbol, interval);
-        const timeSeriesKey = `Time Series (${interval})`;
+        console.log('차트 데이터 응답:', data); // 디버깅 로그
+
+        // API 응답 키 찾기 (유연하게 처리)
+        const timeSeriesKey = Object.keys(data).find(key => key.includes('Time Series')) || `Time Series (${interval})`;
         const timeSeries = data[timeSeriesKey];
 
         if (!timeSeries) {
-          throw new Error('차트 데이터를 찾을 수 없습니다. 심볼을 확인해주세요.');
+          console.error('데이터 키를 찾을 수 없음:', Object.keys(data));
+          throw new Error('차트 데이터를 찾을 수 없습니다. (API 키 확인 또는 제한 초과)');
         }
 
         // 데이터를 차트 형식으로 변환
@@ -73,7 +77,10 @@ export default function RealTimeStockChart({ symbol = 'AAPL', interval = '5min' 
         <div className="animate-pulse h-full flex items-center justify-center">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-            <p className="text-sm text-gray-500">차트 데이터 로딩 중...</p>
+            <p className="text-sm text-gray-500">
+              데이터를 불러오고 있습니다...<br/>
+              <span className="text-xs text-gray-400">(대기열 등록됨: 잠시만 기다려주세요)</span>
+            </p>
           </div>
         </div>
       </div>

@@ -7,10 +7,39 @@ import { API_CONFIG } from '../config/api.config';
 
 const { API_KEY, BASE_URL } = API_CONFIG.ALPHA_VANTAGE;
 
+// 간단한 인메모리 캐시 및 요청 큐
+const apiCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5분 캐시 (API 제한 완화)
+const requestQueue = [];
+let isProcessingQueue = false;
+const REQUEST_DELAY = 15000; // 15초 딜레이 (분당 4회로 더욱 안전하게 제한)
+
 /**
- * API 호출 기본 함수
+ * 요청 큐 처리 함수
  */
-async function fetchFromAlphaVantage(params) {
+async function processQueue() {
+  if (isProcessingQueue || requestQueue.length === 0) return;
+
+  isProcessingQueue = true;
+  const { params, resolve, reject } = requestQueue.shift();
+
+  try {
+    const result = await executeApiCall(params);
+    resolve(result);
+  } catch (error) {
+    reject(error);
+  } finally {
+    setTimeout(() => {
+      isProcessingQueue = false;
+      processQueue();
+    }, REQUEST_DELAY);
+  }
+}
+
+/**
+ * API 호출 실행 함수 (실제 fetch 수행)
+ */
+async function executeApiCall(params) {
   const queryParams = new URLSearchParams({
     ...params,
     apikey: API_KEY,
@@ -27,7 +56,7 @@ async function fetchFromAlphaVantage(params) {
     
     // API 에러 체크
     if (data['Error Message']) {
-      throw new Error(`API 오류: ${data['Error Message']}`);
+      throw new Error(`API 오류: ${data['Error Message']} (심볼을 확인해주세요)`);
     }
     if (data['Note']) {
       throw new Error('API 호출 제한에 도달했습니다. 잠시 후 다시 시도해주세요.');
@@ -38,6 +67,37 @@ async function fetchFromAlphaVantage(params) {
     console.error('Alpha Vantage API 오류:', error);
     throw error;
   }
+}
+
+/**
+ * API 호출 기본 함수 (캐싱 및 큐 적용)
+ */
+async function fetchFromAlphaVantage(params) {
+  // 캐시 키 생성
+  const cacheKey = JSON.stringify(params);
+  
+  // 캐시 확인
+  if (apiCache.has(cacheKey)) {
+    const { data, timestamp } = apiCache.get(cacheKey);
+    if (Date.now() - timestamp < CACHE_DURATION) {
+      console.log('Using cached data for:', params);
+      return data;
+    }
+  }
+
+  // 큐에 요청 추가
+  return new Promise((resolve, reject) => {
+    requestQueue.push({ 
+      params, 
+      resolve: (data) => {
+        // 성공 시 캐시 저장
+        apiCache.set(cacheKey, { data, timestamp: Date.now() });
+        resolve(data);
+      }, 
+      reject 
+    });
+    processQueue();
+  });
 }
 
 /**
@@ -187,4 +247,3 @@ export default {
   getRSI,
   getCompanyOverview,
 };
-

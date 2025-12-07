@@ -57,9 +57,9 @@ export default function TradeHistory() {
                                         </span>
                                     </td>
                                     <td className="px-4 py-3 text-right">{trade.shares}주</td>
-                                    <td className="px-4 py-3 text-right">₩{trade.price.toLocaleString()}</td>
+                                    <td className="px-4 py-3 text-right">${trade.price.toLocaleString()}</td>
                                     <td className="px-4 py-3 text-right font-medium">
-                                        ₩{trade.cost.toLocaleString()}
+                                        ${trade.cost.toLocaleString()}
                                     </td>
                                 </tr>
                             ))}

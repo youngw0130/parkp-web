@@ -63,7 +63,8 @@ export default function StockPriceWidget({ symbol = 'AAPL' }) {
 
   const price = parseFloat(stockData['05. price']);
   const change = parseFloat(stockData['09. change']);
-  const changePercent = stockData['10. change percent'];
+  const changePercentRaw = parseFloat(stockData['10. change percent'].replace('%', ''));
+  const changePercent = `${changePercentRaw.toFixed(2)}%`;
   const isPositive = change >= 0;
 
   return (

@@ -13,7 +13,7 @@ export default function PortfolioTable() {
     return (
         <div className="bg-white rounded-lg shadow-sm border">
             <div className="p-4 border-b">
-                <h2 className="text-lg font-semibold">보유 포트폴리오</h2>
+                <h2 className="text-lg font-semibold">보유 종목</h2>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full">
@@ -43,15 +43,15 @@ export default function PortfolioTable() {
                                         </div>
                                     </td>
                                     <td className="px-4 py-3 text-right">{holding.shares}주</td>
-                                    <td className="px-4 py-3 text-right">₩{holding.avgPrice.toLocaleString()}</td>
-                                    <td className="px-4 py-3 text-right">₩{holding.currentPrice.toLocaleString()}</td>
+                                    <td className="px-4 py-3 text-right">${holding.avgPrice.toLocaleString()}</td>
+                                    <td className="px-4 py-3 text-right">${holding.currentPrice.toLocaleString()}</td>
                                     <td className="px-4 py-3 text-right font-medium">
-                                        ₩{totalValue.toLocaleString()}
+                                        ${totalValue.toLocaleString()}
                                     </td>
                                     <td className={`px-4 py-3 text-right font-medium ${getReturnColor(returnRate)}`}>
                                         {returnRate >= 0 ? '+' : ''}{returnRate.toFixed(2)}%
                                         <div className="text-xs text-slate-500">
-                                            {returnAmount >= 0 ? '+' : ''}₩{returnAmount.toLocaleString()}
+                                            {returnAmount >= 0 ? '+' : ''}${returnAmount.toLocaleString()}
                                         </div>
                                     </td>
                                 </tr>

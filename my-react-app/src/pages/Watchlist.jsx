@@ -1,21 +1,16 @@
 import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
+import WatchlistRow from '../components/WatchlistRow'
 
 export default function Watchlist() {
-    const { portfolio, addToWatchlist } = useApp()
+    const { portfolio, addToWatchlist, removeFromWatchlist } = useApp()
     const [newSymbol, setNewSymbol] = useState('')
 
-    const stockData = {
-        '005930': { name: '삼성전자', price: 78000, change: 2.5 },
-        '035720': { name: '카카오', price: 48000, change: -1.2 },
-        '000660': { name: 'SK하이닉스', price: 125000, change: 3.1 },
-        '005380': { name: '현대차', price: 245000, change: 0.8 },
-        '051910': { name: 'LG화학', price: 420000, change: -0.5 },
-    }
+    // 하드코딩된 stockData 제거
 
     const handleAdd = () => {
-        if (newSymbol && !portfolio.watchlist.includes(newSymbol)) {
-            addToWatchlist(newSymbol)
+        if (newSymbol && !portfolio.watchlist.includes(newSymbol.toUpperCase())) {
+            addToWatchlist(newSymbol.toUpperCase())
             setNewSymbol('')
         }
     }
@@ -23,8 +18,8 @@ export default function Watchlist() {
     return (
         <main className="flex-1 p-6">
             <div className="mb-6">
-                <h1 className="text-2xl font-bold mb-2">관심종목</h1>
-                <p className="text-slate-600">관심있는 종목을 추가하고 실시간으로 모니터링하세요</p>
+                <h1 className="text-2xl font-bold mb-2">관심종목 (실시간 API)</h1>
+                <p className="text-slate-600">Alpha Vantage API를 통해 실시간 시세를 확인합니다.</p>
             </div>
 
             <div className="bg-white rounded-lg p-4 shadow-sm border mb-6">
@@ -35,7 +30,7 @@ export default function Watchlist() {
                         onChange={(e) => setNewSymbol(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
                         className="flex-1 px-3 py-2 border rounded-md"
-                        placeholder="종목코드 입력 (예: 005930)"
+                        placeholder="종목코드 입력 (예: AAPL, TSLA)"
                     />
                     <button
                         onClick={handleAdd}
@@ -61,37 +56,20 @@ export default function Watchlist() {
                             </tr>
                         </thead>
                         <tbody className="divide-y">
-                            {portfolio.watchlist.map((symbol) => {
-                                const stock = stockData[symbol]
-                                if (!stock) return null
-
-                                return (
-                                    <tr key={symbol} className="hover:bg-slate-50">
-                                        <td className="px-4 py-3">
-                                            <div>
-                                                <div className="font-medium">{stock.name}</div>
-                                                <div className="text-sm text-slate-500">{symbol}</div>
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-right font-medium">
-                                            ₩{stock.price.toLocaleString()}
-                                        </td>
-                                        <td
-                                            className={`px-4 py-3 text-right font-medium ${
-                                                stock.change >= 0 ? 'text-red-600' : 'text-blue-600'
-                                            }`}
-                                        >
-                                            {stock.change >= 0 ? '+' : ''}
-                                            {stock.change}%
-                                        </td>
-                                        <td className="px-4 py-3 text-center">
-                                            <button className="text-sm text-blue-600 hover:underline">
-                                                상세보기
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                            {portfolio.watchlist.map((symbol) => (
+                                <WatchlistRow 
+                                    key={symbol} 
+                                    symbol={symbol} 
+                                    onRemove={removeFromWatchlist} 
+                                />
+                            ))}
+                            {portfolio.watchlist.length === 0 && (
+                                <tr>
+                                    <td colSpan="4" className="px-4 py-8 text-center text-slate-500">
+                                        관심종목이 없습니다. 종목을 추가해보세요.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
