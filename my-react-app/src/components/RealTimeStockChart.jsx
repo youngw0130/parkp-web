@@ -8,13 +8,13 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts';
-import { getStockIntradayData } from '../utils/alphaVantageApi';
+import { getStockDailyData } from '../utils/alphaVantageApi';
 
 /**
  * 실시간 주식 차트 컴포넌트
  * Alpha Vantage API를 사용하여 실제 데이터를 표시
  */
-export default function RealTimeStockChart({ symbol = 'AAPL', interval = '5min' }) {
+export default function RealTimeStockChart({ symbol = 'AAPL', interval = 'daily' }) {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,50 +26,46 @@ export default function RealTimeStockChart({ symbol = 'AAPL', interval = '5min' 
         setLoading(true);
         setError(null);
         
-        const data = await getStockIntradayData(symbol, interval);
-        console.log('차트 데이터 응답:', data); // 디버깅 로그
+        // 일봉 데이터 사용 (안정성 확보)
+        const data = await getStockDailyData(symbol);
+        console.log(`차트 데이터 응답 (${symbol}):`, data);
 
-        // API 응답 키 찾기 (유연하게 처리)
-        const timeSeriesKey = Object.keys(data).find(key => key.includes('Time Series')) || `Time Series (${interval})`;
+        if (data['Error Message']) {
+            throw new Error(`API 오류: ${data['Error Message']}`);
+        }
+        if (data['Note']) {
+            throw new Error('API 호출 제한 초과');
+        }
+
+        const timeSeriesKey = 'Time Series (Daily)';
         const timeSeries = data[timeSeriesKey];
 
         if (!timeSeries) {
-          console.error('데이터 키를 찾을 수 없음:', Object.keys(data));
-          throw new Error('차트 데이터를 찾을 수 없습니다. (API 키 확인 또는 제한 초과)');
+          throw new Error('차트 데이터를 불러올 수 없습니다.');
         }
 
         // 데이터를 차트 형식으로 변환
         const formattedData = Object.entries(timeSeries)
-          .slice(0, 50) // 최근 50개 데이터 포인트
-          .map(([timestamp, values]) => ({
-            time: new Date(timestamp).toLocaleTimeString('ko-KR', {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
+          .slice(0, 30) // 최근 30일
+          .map(([date, values]) => ({
+            time: date.substring(5), // MM-DD
             price: parseFloat(values['4. close']),
             volume: parseInt(values['5. volume']),
-            high: parseFloat(values['2. high']),
-            low: parseFloat(values['3. low']),
           }))
-          .reverse(); // 시간순 정렬
+          .reverse();
 
         setChartData(formattedData);
         setLastUpdate(new Date().toLocaleTimeString('ko-KR'));
       } catch (err) {
-        setError(err.message || '차트 데이터를 불러오는데 실패했습니다.');
-        console.error('차트 데이터 로딩 실패:', err);
+        setError(err.message || '데이터 로딩 실패');
+        console.error('차트 에러:', err);
       } finally {
         setLoading(false);
       }
     }
 
     fetchChartData();
-
-    // 5분마다 자동 업데이트
-    const intervalId = setInterval(fetchChartData, 5 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, [symbol, interval]);
+  }, [symbol]); // interval 의존성 제거 (daily 고정)
 
   if (loading) {
     return (

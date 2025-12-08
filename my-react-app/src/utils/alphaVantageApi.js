@@ -9,10 +9,10 @@ const { API_KEY, BASE_URL } = API_CONFIG.ALPHA_VANTAGE;
 
 // 간단한 인메모리 캐시 및 요청 큐
 const apiCache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5분 캐시 (API 제한 완화)
+const CACHE_DURATION = 5 * 60 * 1000; // 5분 캐시
 const requestQueue = [];
 let isProcessingQueue = false;
-const REQUEST_DELAY = 15000; // 15초 딜레이 (분당 4회로 더욱 안전하게 제한)
+const REQUEST_DELAY = 2000; // 2초 딜레이 (빠른 로딩을 위해 단축)
 
 /**
  * 요청 큐 처리 함수
