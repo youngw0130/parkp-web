@@ -12,10 +12,10 @@ export default function PaperTrading() {
     return (
         <main className="flex-1 p-6 bg-slate-50 min-h-screen">
             <div className="mb-8 flex justify-between items-end">
-                <div>
+                    <div>
                     <h1 className="text-3xl font-bold text-slate-900 mb-2">모의투자</h1>
                     <p className="text-slate-600">가상의 자금으로 실전 매매를 연습해보세요</p>
-                </div>
+                        </div>
                 <div className="text-right bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
                     <div className="text-sm text-slate-500 mb-1">내 자산 (예수금)</div>
                     <div className="text-2xl font-bold text-slate-800">
@@ -43,26 +43,26 @@ export default function PaperTrading() {
                     {/* 하단 탭 메뉴 */}
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                         <div className="flex border-b border-slate-100">
-                            <button
-                                onClick={() => setActiveTab('trade')}
+                <button
+                    onClick={() => setActiveTab('trade')}
                                 className={`px-6 py-4 font-medium transition-colors ${
                                     activeTab === 'trade' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'
-                                }`}
-                            >
-                                거래 내역
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('backtest')}
+                    }`}
+                >
+                    거래 내역
+                </button>
+                <button
+                    onClick={() => setActiveTab('backtest')}
                                 className={`px-6 py-4 font-medium transition-colors ${
                                     activeTab === 'backtest' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'
-                                }`}
-                            >
+                    }`}
+                >
                                 수익률 분석
-                            </button>
-                        </div>
+                </button>
+            </div>
                         <div className="p-6">
                             {activeTab === 'trade' && <TradeHistory />}
-                            {activeTab === 'backtest' && (
+            {activeTab === 'backtest' && (
                                 <div className="text-center py-12 text-slate-500">
                                     수익률 분석 기능은 준비 중입니다.
                                 </div>

@@ -67,8 +67,8 @@ export default function Watchlist() {
                                 <tr>
                                     <td colSpan="4" className="px-4 py-8 text-center text-slate-500">
                                         관심종목이 없습니다. 종목을 추가해보세요.
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                             )}
                         </tbody>
                     </table>

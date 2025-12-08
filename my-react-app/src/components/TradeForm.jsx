@@ -96,10 +96,10 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
 
             <div className="p-6 space-y-6">
                 {/* 종목 검색 */}
-                <div>
+                    <div>
                     <label className="block text-sm text-slate-500 mb-1 font-medium">종목코드</label>
                     <div className="relative">
-                        <input 
+                        <input
                             type="text"
                             value={symbol}
                             onChange={(e) => setSymbol(e.target.value.toUpperCase())}
@@ -130,7 +130,7 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
                 <div>
                     <label className="block text-sm text-slate-500 mb-2 font-medium text-center">수량</label>
                     <div className="flex items-center justify-center gap-4">
-                        <button 
+                        <button
                             onClick={() => setShares(Math.max(1, shares - 1))}
                             className="w-12 h-12 rounded-full bg-slate-100 text-slate-600 text-2xl font-bold hover:bg-slate-200"
                         >
@@ -145,7 +145,7 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
                             />
                             <span className="text-sm text-slate-400">주</span>
                         </div>
-                        <button 
+                        <button
                             onClick={() => setShares(shares + 1)}
                             className="w-12 h-12 rounded-full bg-slate-100 text-slate-600 text-2xl font-bold hover:bg-slate-200"
                         >
@@ -173,7 +173,7 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
                     <div className="flex justify-between items-center text-sm">
                         <span className="text-slate-500">주문 가능 금액</span>
                         <span className="font-medium text-slate-700">${paperTrades.balance.toLocaleString()}</span>
-                    </div>
+                        </div>
                     <div className="flex justify-between items-center">
                         <span className="text-slate-500 font-medium">총 주문금액</span>
                         <span className="text-xl font-bold text-slate-800">
@@ -181,7 +181,7 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
                         </span>
                     </div>
 
-                    <button
+                <button
                         onClick={handleSubmit}
                         disabled={currentPrice === 0}
                         className={`w-full py-4 rounded-xl text-lg font-bold text-white shadow-lg transition-transform active:scale-95 ${
@@ -191,9 +191,9 @@ export default function TradeForm({ selectedSymbol = '', onSymbolChange }) {
                                     ? 'bg-red-500 hover:bg-red-600 shadow-red-200' 
                                     : 'bg-blue-500 hover:bg-blue-600 shadow-blue-200'
                         }`}
-                    >
+                >
                         {mode === 'buy' ? '구매하기' : '판매하기'}
-                    </button>
+                </button>
                 </div>
             </div>
         </div>
